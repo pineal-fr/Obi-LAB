@@ -4,6 +4,7 @@ Ce projet est une infrastructure complète, conteneurisée via **Docker Compose*
 
 Il déploie une stack web moderne (NGINX/PHP-FPM) avec une chaîne de monitoring complète (Prometheus, Loki, Grafana).
 
+Les credentials se trouvent dansle fichier wordpress.env, vous pouvez les garder ou les modifier.
 -----
 
 ## 🌟 Fonctionnalités et Compétences Clés
