@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 15s  # Intervalle pour récupérer les métriques
+  evaluation_interval: 15s  # Intervalle pour évaluer les règles d'alerting
+
+scrape_configs:
+  # 🔹 Surveille Prometheus lui-même
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  # 🔹 Surveille les métriques système via Node Exporter
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # 🔹 Surveille NGINX
+  - job_name: 'nginx-exporter'
+    static_configs:
+      - targets: ['nginx-exporter:9113']

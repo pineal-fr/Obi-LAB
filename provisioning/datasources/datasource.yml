@@ -1,0 +1,22 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      timeInterval: "5s"
+
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    jsonData:
+      maxLines: 1000
+
+#Ce fichier est une configuration pour Grafana.
+#Il lui indique automatiquement où se connecter pour trouver les données, sans avoir à le faire manuellement
+##Prometheus pour les métriques (les chiffres pour les graphiques).
+##Loki pour les logs (les lignes de texte des journaux d'événements).

@@ -1,0 +1,209 @@
+# Définit la version de la syntaxe Docker Compose à utiliser.
+version: '3.8'
+
+# La section principale où tous les services (conteneurs) sont définis.
+services:
+  ### ---------------------------------------------------- ###
+  ### 🐬 MySQL (Service de Base de Données)               ###
+  ### ---------------------------------------------------- ###
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    restart: always
+    ports:
+      - "8090:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: my_database
+      MYSQL_USER: ${WORDPRESS_DB_USER}
+      MYSQL_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    # 👇 DECOMMENTEZ CES TROIS LIGNES CI-DESSOUS SEULEMENT EN TEST POUR VOIR LES LOGS DE LA BASE SQL DEPUIS LOKI
+    command: 
+      - --general_log=1
+      - --general_log_file=/var/lib/mysql/mysql.lo
+    networks:
+      - monitoring
+
+  ### ---------------------------------------------------- ###
+  ### 🌐 WordPress (Moteur PHP-FPM uniquement)             ###
+  ### ---------------------------------------------------- ###
+  # MODIFIÉ : Ce service ne fait plus tourner Apache, mais uniquement le moteur PHP (FPM).
+  wordpress:
+    # MODIFIÉ : On utilise une image plus légère qui ne contient que PHP-FPM.
+    image: wordpress:fpm-alpine
+    container_name: wordpress
+    restart: always
+    expose:
+      - "9000"
+    # SUPPRIMÉ : Les ports ne sont plus exposés ici, c'est NGINX qui s'en charge.
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_NAME: my_database
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+    volumes:
+      # On continue de monter le volume pour les fichiers de WordPress.
+      - wordpress_data:/var/www/html
+      # SUPPRIMÉ : Le volume pour apache-status.conf n'est plus nécessaire.
+    depends_on:
+      - mysql
+    networks:
+      - monitoring
+
+  ### ---------------------------------------------------- ###
+  ### 🚀 NGINX (Serveur Web)                       ###
+  ### ---------------------------------------------------- ###
+  # Ce service remplace Apache. Il sert les pages de WordPress au public.
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    ports:
+      # C'est NGINX qui est accessible sur le port 8080 de votre machine.
+      - "8080:80"
+    volumes:
+      # On lui donne accès aux fichiers de WordPress pour qu'il puisse les servir.
+      - wordpress_data:/var/www/html
+      # On monte notre propre fichier de configuration pour NGINX.
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - wordpress
+    networks:
+      - monitoring
+
+  ### ---------------------------------------------------- ###
+  ### 📊 NGINX Exporter (Remplace Apache Exporter)         ###
+  ### ---------------------------------------------------- ###
+  # REMPLACÉ : Ce service expose les métriques de NGINX pour Prometheus.
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:latest
+    container_name: nginx-exporter
+    restart: always
+    ports:
+      - "9113:9113" # Le port standard pour cet exportateur est 9113.
+    # On lui indique où trouver la page de statut de NGINX via une commande.
+    command:
+      - '-nginx.scrape-uri=http://nginx/stub_status'
+    depends_on:
+      - nginx
+    networks:
+      - monitoring
+
+  ### ---------------------------------------------------- ###
+  ### 🗄️ phpMyAdmin (Outil de gestion de la BDD)          ###
+  ### ---------------------------------------------------- ###
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: ${WORDPRESS_DB_USER}
+      PMA_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+    depends_on:
+      - mysql
+    networks:
+      - monitoring
+
+  ### ---------------------------------------------------- ###
+  ### 📈 Prometheus (Base de données des métriques)       ###
+  ### ---------------------------------------------------- ###
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    depends_on:
+      # MODIFIÉ : On dépend maintenant de nginx-exporter.
+      - node-exporter
+      - nginx-exporter
+    networks:
+      - monitoring
+
+  # ... Les services Grafana, Node Exporter, Loki et Promtail restent identiques ...
+  # (Je les inclus ci-dessous pour que le fichier soit complet)
+
+  ### ---------------------------------------------------- ###
+  ### 🎨 Grafana (Outil de visualisation)                 ###
+  ### ---------------------------------------------------- ###
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - loki
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - ./provisioning/datasources:/etc/grafana/provisioning/datasources
+    networks:
+      - monitoring
+
+  ### ---------------------------------------------------- ###
+  ### 🧠 Node Exporter (Collecteur de métriques système)   ###
+  ### ---------------------------------------------------- ###
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: always
+    ports:
+      - "9100:9100"
+    networks:
+      - monitoring
+
+  ### ---------------------------------------------------- ###
+  ### 🪵 Loki (Base de données des logs)                  ###
+  ### ---------------------------------------------------- ###
+  loki:
+    image: grafana/loki:2.9.1
+    container_name: loki
+    restart: always
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - monitoring
+
+  ### ---------------------------------------------------- ###
+  ### 📜 Promtail (Collecteur de logs)                    ###
+  ### ---------------------------------------------------- ###
+  promtail:
+    image: grafana/promtail:2.9.1
+    container_name: promtail
+    restart: always
+    volumes:
+      - ./promtail/config.yaml:/etc/promtail/config.yaml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/config.yaml
+    depends_on:
+      - loki
+    networks:
+      - monitoring
+
+### ---------------------------------------------------- ###
+### 💾 Volumes (Stockage persistant)                      ###
+### ---------------------------------------------------- ###
+volumes:
+  wordpress_data:
+  mysql_data:
+
+### ---------------------------------------------------- ###
+### 🌐 Réseau (Communication entre conteneurs)           ###
+### ---------------------------------------------------- ###
+networks:
+  monitoring:
+    driver: bridge

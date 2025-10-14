@@ -1,0 +1,31 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /var/lib/promtail/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container_name'
+
+  - job_name: varlogs
+    static_configs:
+      - targets: ['localhost']
+        labels:
+          job: varlogs
+          __path__: /var/log/*.log
+
+#Ce fichier est la feuille de route pour Promtail, l'agent qui collecte les logs. Il lui donne deux missions distinctes :
+#Surveiller Docker : Il découvre automatiquement tous les conteneurs qui tournent
+#et envoie leurs logs à Loki en leur ajoutant une étiquette container_name.
+#Surveiller le système : Il lit en plus les fichiers de log généraux de la machine (dans /var/log) et les envoie également à Loki.

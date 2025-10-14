@@ -1,0 +1,47 @@
+#Création du container en stipulant de le fichier d'environnement.
+Celui par défaut est .env
+docker-compose --env-file wordpress.env up -d
+--Si utilisation de variables locales : export $(grep -v '^#' var.yml | xargs) && docker-compose up -d
+docker-compose ps
+
+#Se connecter à la page http://localhost:8080 et entrer les informations du fichier wordpress.env
+
+#Acceder à la base de données :
+docker exec -it mysql mysql -u root -prootpassword
+#Commandes SQL :
+SHOW DATABASES;
+USE my_database;
+SELECT User, Host FROM mysql.user;
+SHOW GRANTS FOR 'user_wordpress'@'localhost';
+EXIT;
+
+#acceder à mon container
+docker exec -it wordpress /bin/bash
+
+#Connecter son prometheus à Grafana:
+saisir 'node_cpu_seconds_total' dans Prometheus et execute ou bien dans Grafana 
+
+
+
+#Fermer le container et supprimer les volumes associés
+docker-compose down -v
+#Supprimer les containers, les volumes et les images non utilisés.
+docker system prune -a --volumes
+#Supprimer
+
+##Si bug à la relance d'un nouveau container##
+docker-compose down -v
+ls -la ./wordpress
+ls -la ./db_data
+rm -rf ./wordpress/*
+rm -rf ./db_data/*
+docker-compose --env-file wordpress.env up -d
+#Si l'erreur persiste#
+rm -rf ./wordpress
+rm -rf ./db_data
+mkdir ./wordpress ./db_data
+
+Prompt temporaire : 
+export PS1='\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]${PWD##*/}\[\e[0m\]\[\e[1;32m\]\$\[\e[0m\] '
+
+
