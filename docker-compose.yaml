@@ -1,5 +1,5 @@
 # Définit la version de la syntaxe Docker Compose à utiliser.
-version: '3.8'
+#version: '3.8'
 
 # La section principale où tous les services (conteneurs) sont définis.
 services:
@@ -20,9 +20,9 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     # 👇 DECOMMENTEZ CES TROIS LIGNES CI-DESSOUS SEULEMENT EN TEST POUR VOIR LES LOGS DE LA BASE SQL DEPUIS LOKI
-    command: 
-      - --general_log=1
-      - --general_log_file=/var/lib/mysql/mysql.lo
+    #command: 
+      #- --general_log=1
+      #- --general_log_file=/var/lib/mysql/mysql.lo
     networks:
       - monitoring
 
@@ -206,4 +206,5 @@ volumes:
 ### ---------------------------------------------------- ###
 networks:
   monitoring:
+
     driver: bridge
