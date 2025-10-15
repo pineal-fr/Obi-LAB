@@ -1,4 +1,4 @@
-# 📚 DevOps Lab: Full-Stack WordPress Monitoring with Grafana
+# 📚 DevOps Lab: Full-Stack WordPress Monitoring with Grafana - Docker-compose
 
 Ce projet est une infrastructure complète, conteneurisée via **Docker Compose**, conçue pour la pratique des compétences DevOps, de la supervision (Observability) et de la gestion d'applications web.
 
