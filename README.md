@@ -90,7 +90,14 @@ Utilisez les requêtes ci-dessous dans l'onglet **Explore** de Grafana pour vali
         {container_name="nginx"} |= "POST /wp-login.php"
         ```
 
-### C. Gestion des Données (SQL)
+### C. Gestion des Données (SQL) via PhpMyAdmin
+
+* **Dans le panneau de gauche, cliquez sur le nom de votre base de données WordPress (qui est my_database selon votre configuration).
+Ouvrez l'onglet SQL :**
+* **Une fois dans la base** `my_database`, cliquez sur l'onglet `SQL` dans le menu supérieur.
+
+* **Exécutez la requête :**
+Collez l'une des requêtes ci-dessous dans la zone de texte, puis cliquez sur le bouton Exécuter (ou "Go").
 
   * **Lister les utilisateurs :**
     ```sql
