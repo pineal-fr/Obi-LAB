@@ -1,4 +1,3 @@
-# Définit la version de la syntaxe Docker Compose à utiliser.
 #version: '3.8'
 
 # La section principale où tous les services (conteneurs) sont définis.
@@ -14,12 +13,12 @@ services:
       - "8090:3306"
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: my_database
+      MYSQL_DATABASE: obi_database
       MYSQL_USER: ${WORDPRESS_DB_USER}
       MYSQL_PASSWORD: ${WORDPRESS_DB_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
-    # 👇 DECOMMENTEZ CES TROIS LIGNES CI-DESSOUS SEULEMENT EN TEST POUR VOIR LES LOGS DE LA BASE SQL DEPUIS LOKI
+    # 👇 DECOMMENTEZ CES TROIS LIGNES CI-DESSOUS *SEULEMENT EN TEST* POUR VOIR LES *LOGS DE LA BASE SQL DEPUIS LOKI*
     #command: 
       #- --general_log=1
       #- --general_log_file=/var/lib/mysql/mysql.lo
@@ -29,24 +28,20 @@ services:
   ### ---------------------------------------------------- ###
   ### 🌐 WordPress (Moteur PHP-FPM uniquement)             ###
   ### ---------------------------------------------------- ###
-  # MODIFIÉ : Ce service ne fait plus tourner Apache, mais uniquement le moteur PHP (FPM).
   wordpress:
-    # MODIFIÉ : On utilise une image plus légère qui ne contient que PHP-FPM.
     image: wordpress:fpm-alpine
     container_name: wordpress
     restart: always
     expose:
       - "9000"
-    # SUPPRIMÉ : Les ports ne sont plus exposés ici, c'est NGINX qui s'en charge.
     environment:
       WORDPRESS_DB_HOST: mysql
-      WORDPRESS_DB_NAME: my_database
+      WORDPRESS_DB_NAME: obi_database
       WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
       WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
     volumes:
-      # On continue de monter le volume pour les fichiers de WordPress.
+      # Monte le volume pour les fichiers de WordPress.
       - wordpress_data:/var/www/html
-      # SUPPRIMÉ : Le volume pour apache-status.conf n'est plus nécessaire.
     depends_on:
       - mysql
     networks:
@@ -55,13 +50,11 @@ services:
   ### ---------------------------------------------------- ###
   ### 🚀 NGINX (Serveur Web)                       ###
   ### ---------------------------------------------------- ###
-  # Ce service remplace Apache. Il sert les pages de WordPress au public.
   nginx:
     image: nginx:alpine
     container_name: nginx
     restart: always
     ports:
-      # C'est NGINX qui est accessible sur le port 8080 de votre machine.
       - "8080:80"
     volumes:
       # On lui donne accès aux fichiers de WordPress pour qu'il puisse les servir.
@@ -76,7 +69,6 @@ services:
   ### ---------------------------------------------------- ###
   ### 📊 NGINX Exporter (Remplace Apache Exporter)         ###
   ### ---------------------------------------------------- ###
-  # REMPLACÉ : Ce service expose les métriques de NGINX pour Prometheus.
   nginx-exporter:
     image: nginx/nginx-prometheus-exporter:latest
     container_name: nginx-exporter
@@ -123,14 +115,10 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
     depends_on:
-      # MODIFIÉ : On dépend maintenant de nginx-exporter.
       - node-exporter
       - nginx-exporter
     networks:
       - monitoring
-
-  # ... Les services Grafana, Node Exporter, Loki et Promtail restent identiques ...
-  # (Je les inclus ci-dessous pour que le fichier soit complet)
 
   ### ---------------------------------------------------- ###
   ### 🎨 Grafana (Outil de visualisation)                 ###
@@ -206,5 +194,5 @@ volumes:
 ### ---------------------------------------------------- ###
 networks:
   monitoring:
-
     driver: bridge
+
