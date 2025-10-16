@@ -32,14 +32,25 @@ Au-delà d'un simple projet de déploiement, cette infrastructure est un vérita
 
 ## ⚙️ Démarrage rapide de l'infrastructure
 
-### 1\. Prérequis
+### 1. Prérequis
 
-Assurez-vous d'avoir **Docker** et **Docker Compose** installés sur votre machine (via Docker Desktop ou WSL/Linux).
+Assurez-vous d’avoir **Docker** et **Docker Compose** installés sur votre machine.
 
-### 2\. Placer les fichiers
+- [🧩 Télécharger VSCode](https://code.visualstudio.com/download)
+- [🐧 Installer WSL (Windows)](https://learn.microsoft.com/fr-fr/windows/wsl/install)
+- [🐳 Installer Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/)
 
-1.  Assurez-vous que tous les fichiers de configuration (`docker-compose.yaml`, `nginx.conf`, `prometheus.yml`, etc.) sont présents à la racine du projet.
-2.  Vérifiez que votre fichier de secrets **`wordpress.env`** est également à la racine.
+---
+
+### 2. Placement des Fichiers
+
+1. Téléchargez le dossier complet du projet.  
+   Déplacez-le dans le répertoire de votre choix, puis décompressez-le.  
+   Ouvrez le dossier extrait avec **VSCode** ou tout autre éditeur de texte.  
+   Vérifiez que tous les fichiers de configuration (`docker-compose.yaml`, `nginx.conf`, `prometheus.yml`, etc.) sont présents à la racine.
+2. Assurez-vous que votre fichier **`wordpress.env`** est également à la racine.
+
+---
 
 ### 3\. Lancement de la Stack
 
