@@ -76,7 +76,6 @@ Ce guide rassemble les commandes et configurations essentielles pour gérer, sup
   * **Tableaux de Bord (Dashboards) à Importer** :
 
       * **`1860`** : **Node Exporter Full** - Métriques complètes du système (CPU, RAM, disque).
-      * **`9614`** : **NGINX exporter dashboard** - Métriques du serveur web NGINX.
       * **`13639`** : **Loki / Promtail Dashboard** - Vue d'ensemble de la chaîne de logging.
       * **`3662`** : **Prometheus 2.0 Stats** - Supervision de Prometheus lui-même.
 
@@ -140,3 +139,4 @@ Ce guide rassemble les commandes et configurations essentielles pour gérer, sup
     ```bash
     export PS1='\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]${PWD##*/}\[\e[0m\]\[\e[1;32m\]\$\[\e[0m\] '
     ```
+
