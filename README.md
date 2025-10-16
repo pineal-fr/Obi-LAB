@@ -112,7 +112,7 @@ Utilisez les requêtes ci-dessous dans l'onglet **Explore** de Grafana pour vali
 
 ### C. Gestion des Données (SQL) via PhpMyAdmin
 
-1.  **Dans le panneau de gauche de phpMyAdmin,** cliquez sur le nom de votre base `my_database`.
+1.  **Dans le panneau de gauche de phpMyAdmin,** cliquez sur le nom de votre base `obi_database`.
 2.  **Ouvrez l'onglet `SQL`** dans le menu supérieur.
 3.  **Exécutez la requête :** Collez l'une des requêtes ci-dessous, puis cliquez sur **Exécuter**.
 
