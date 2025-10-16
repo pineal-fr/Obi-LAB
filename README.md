@@ -2,7 +2,14 @@
 
 Ce projet est une infrastructure complète, conteneurisée via **Docker Compose**, conçue pour la pratique des compétences DevOps, de la supervision (Observability) et de la gestion d'applications web.
 
-Il déploie une stack web moderne (NGINX/PHP-FPM) avec une chaîne de monitoring complète (Prometheus, Loki, Grafana). Les credentials se trouvent dans le fichier `wordpress.env`; vous pouvez les garder ou les modifier.
+Il déploie une stack web moderne (NGINX/PHP-FPM) avec une chaîne de monitoring complète (Prometheus, Loki, Grafana).
+Ce laboratoire n'est pas une finalité, mais une fondation flexible conçue pour évoluer : modifiez les versions de PHP ou WordPress pour simuler des vulnérabilités, intégrez une gestion d'utilisateurs, mettez la base de données à l'épreuve ou adaptez la stack pour explorer de nouveaux scénarios de test et de supervision.
+Les credentials se trouvent dans le fichier `wordpress.env`; vous pouvez les garder ou les modifier.
+
+
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/85a8f718-f819-490c-b2d4-7c986a06cdf1" />
+
+
 
 -----
 
