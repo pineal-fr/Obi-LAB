@@ -1,7 +1,6 @@
 ### Schéma de l'Infrastructure
 
 
-
 ***
 
 ## Plan Détaillé de l'Infrastructure
