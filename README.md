@@ -7,7 +7,8 @@ Ce laboratoire n'est pas une finalité, mais une fondation flexible conçue pour
 Les credentials se trouvent dans le fichier `wordpress.env`; vous pouvez les garder ou les modifier.
 
 
-<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/85a8f718-f819-490c-b2d4-7c986a06cdf1" />
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/67f8449b-b5ae-430f-a827-a92befe76559" />
+
 
 
 
