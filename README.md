@@ -1,5 +1,7 @@
 # Infrastructure DevOps : WordPress, Nginx & Monitoring
 
+**Proposé par Ryad.T**
+
 Ce projet est une infrastructure complète, conteneurisée via **Docker Compose**, conçue pour la pratique des compétences DevOps, de la supervision (Observability) et de la gestion d'applications web.
 
 Il déploie une stack web moderne (NGINX/PHP-FPM) avec une chaîne de monitoring complète (Prometheus, Loki, Grafana).
