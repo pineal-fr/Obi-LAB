@@ -37,6 +37,7 @@ Au-delà d'un simple projet de déploiement, cette infrastructure est un vérita
   * **Maîtrise du SQL et de PhpMyAdmin :** En accédant directement à la base de données via phpMyAdmin, vous pouvez visualiser comment WordPress structure ses données. C'est une excellente occasion pour pratiquer le langage SQL, en exécutant des requêtes pour lister des utilisateurs, analyser des contenus ou comprendre les relations entre les tables.
   * **Analyse de Logs et Débogage :** Grâce à la centralisation des logs avec Loki, vous apprenez à traquer les erreurs, à surveiller les accès et à comprendre le comportement des applications. C'est une compétence essentielle pour le débogage et l'analyse de sécurité.
   * **Fondamentaux DevOps :** Manipulez une chaîne d'outils professionnels pour comprendre les principes de l'observabilité (monitoring et logging) et de l'Infrastructure as Code (IaC) avec Docker Compose.
+  *  **4,55 GB GB de stockage | ~420 mb de RAM**
 
 -----
 
