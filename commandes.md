@@ -22,6 +22,18 @@ Ce guide rassemble les commandes et configurations essentielles pour gérer, sup
     docker-compose ps
     ```
 
+ * **Arrêter les conteneurs sans supprimer les volumes** (garde les données) :
+
+    ```bash
+    docker-compose down stop
+    ```
+
+ * **Relancer les conteneurs avec les sauvegardes** (garde les données) :
+
+    ```bash
+    docker-compose down start
+    ```
+
   * **Arrêter les conteneurs et supprimer les volumes** (réinitialise les données) :
 
     ```bash
@@ -139,4 +151,5 @@ Ce guide rassemble les commandes et configurations essentielles pour gérer, sup
     ```bash
     export PS1='\[\e[1;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]${PWD##*/}\[\e[0m\]\[\e[1;32m\]\$\[\e[0m\] '
     ```
+
 
